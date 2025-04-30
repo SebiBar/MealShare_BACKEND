@@ -45,8 +45,7 @@ public class AuthController {
                         loginRequest.getPassword()
                 )
         );
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        //SecurityContextHolder.getContext().setAuthentication(authentication); redundant?
         User userDetails = (User) authentication.getPrincipal();
         String jwt = jwtUtil.generateToken(userDetails);
 

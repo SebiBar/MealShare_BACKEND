@@ -1,11 +1,9 @@
 package com.example.memanager.user;
 
-import com.example.memanager.dto.RegisterRequest;
+import com.example.memanager.recipe.Recipe;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,8 +14,8 @@ import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
+@Builder
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
@@ -37,6 +35,10 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Role role = Role.USER;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Recipe> recipes;
 
     private boolean accountNonExpired = true;
     private boolean accountNonLocked = true;
@@ -70,6 +72,16 @@ public class User implements UserDetails {
 
     public enum Role {
         USER, ADMIN
+    }
+
+    public void addRecipe(Recipe recipe) {
+        recipes.add(recipe);
+        recipe.setUser(this);
+    }
+
+    public void removeRecipe(Recipe recipe) {
+        recipes.remove(recipe);
+        recipe.setUser(null);
     }
 
 }
