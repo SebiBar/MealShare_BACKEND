@@ -1,4 +1,4 @@
-package com.example.memanager.recipe;
+package com.example.MealShare.recipe;
 
 
 import jakarta.persistence.*;

@@ -1,8 +1,7 @@
-package com.example.memanager.recipe;
+package com.example.MealShare.recipe;
 
-import com.example.memanager.recipe.Ingredient;
 import jakarta.persistence.*;
-import com.example.memanager.user.User;
+import com.example.MealShare.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,7 +29,8 @@ public class Recipe {
     private String description;
     private String link;
 
-    private int prepTime;
+    private String  prepTime;
+
     private int calories;
     private int protein;
     private int carbs;

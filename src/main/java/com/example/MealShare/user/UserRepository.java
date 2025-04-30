@@ -1,4 +1,4 @@
-package com.example.memanager.user;
+package com.example.MealShare.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

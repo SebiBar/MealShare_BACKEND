@@ -1,6 +1,6 @@
-package com.example.memanager.user;
+package com.example.MealShare.user;
 
-import com.example.memanager.recipe.Recipe;
+import com.example.MealShare.recipe.Recipe;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;

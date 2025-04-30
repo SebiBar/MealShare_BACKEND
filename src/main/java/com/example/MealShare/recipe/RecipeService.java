@@ -1,4 +1,4 @@
-package com.example.memanager.recipe;
+package com.example.MealShare.recipe;
 
 import org.springframework.stereotype.Service;
 
@@ -21,11 +21,27 @@ public class RecipeService {
         return recipeRepository.getReferenceById(id);
     }
 
-    public void updateRecipe(Recipe recipe) {
-        // Logic to update a recipe
+    public Recipe updateRecipe(Recipe updatedRecipe) {
+        Recipe existingRecipe = recipeRepository.getReferenceById(updatedRecipe.getId());
+
+        // Update recipe fields
+        existingRecipe.setTitle(updatedRecipe.getTitle());
+        existingRecipe.setDescription(updatedRecipe.getDescription());
+        // Update other recipe fields as needed
+
+        // Clear and re-add ingredients to maintain proper tracking
+        existingRecipe.getIngredients().clear();
+
+        // Ensure each ingredient references this recipe
+        updatedRecipe.getIngredients().forEach(ingredient -> {
+            ingredient.setRecipe(existingRecipe);
+            existingRecipe.getIngredients().add(ingredient);
+        });
+
+        return recipeRepository.save(existingRecipe);
     }
 
     public void deleteRecipe(Long id) {
-        // Logic to delete a recipe
+        recipeRepository.deleteById(id);
     }
 }

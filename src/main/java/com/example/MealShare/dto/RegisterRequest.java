@@ -1,4 +1,4 @@
-package com.example.memanager.dto;
+package com.example.MealShare.dto;
 
 import lombok.Getter;
 import lombok.Setter;

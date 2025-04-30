@@ -1,4 +1,4 @@
-package com.example.memanager.security;
+package com.example.MealShare.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,12 +16,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.context.annotation.ComponentScan;
-import com.example.memanager.user.UserDetailsServiceImpl;
+import com.example.MealShare.user.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@ComponentScan(basePackages = {"com.example.memanager.user", "com.example.memanager.security"})
+@ComponentScan(basePackages = {"com.example.MealShare.user", "com.example.MealShare.security"})
 public class SecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;

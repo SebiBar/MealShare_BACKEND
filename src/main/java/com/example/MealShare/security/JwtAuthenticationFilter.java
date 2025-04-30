@@ -1,4 +1,4 @@
-package com.example.memanager.security;
+package com.example.MealShare.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

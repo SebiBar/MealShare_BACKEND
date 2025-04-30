@@ -1,4 +1,4 @@
-package com.example.memanager.security;
+package com.example.MealShare.security;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
