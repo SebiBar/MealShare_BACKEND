@@ -57,7 +57,7 @@ public class RecipeController {
     @PostMapping("/recipes")
     public ResponseEntity<?> createRecipe(@RequestBody Recipe recipe, Authentication authentication) {
         Recipe createdRecipe = recipeService.createRecipeForUser(recipe, authentication.getName());
-        return new ResponseEntity<>(createdRecipe.getId(), HttpStatus.CREATED);
+        return new ResponseEntity<>(createdRecipe, HttpStatus.CREATED);
     }
 
     @Operation(summary = "Update recipe", description = "Updates an existing recipe if the authenticated user is the owner")
