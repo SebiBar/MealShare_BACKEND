@@ -27,10 +27,10 @@ The API documentation is available at `http://localhost:8080/swagger-ui.html` wh
 
 ### Authentication Endpoints
 
-| Method | Endpoint | Description | Request Body | Response |
-|--------|----------|-------------|--------------|----------|
+| Method | Endpoint | Description | Request Body | Response  |
+|--------|----------|-------------|--------------|-----------|
 | POST | `/api/auth/login` | Authenticate user | `LoginRequest` (username, password) | JWT token |
-| POST | `/api/auth/register` | Register new user | `RegisterRequest` (username, email, password) | Success message |
+| POST | `/api/auth/register` | Register new user | `RegisterRequest` (username, email, password) | JWT token |
 
 ### Recipe Endpoints
 

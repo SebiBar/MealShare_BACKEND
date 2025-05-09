@@ -1,5 +1,6 @@
 package com.example.MealShare.recipe;
 
+import com.example.MealShare.dto.RecipeDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -38,12 +39,12 @@ public class RecipeController {
     @Operation(summary = "Get recipe by ID", description = "Retrieves a specific recipe by its ID")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully retrieved recipe",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = Recipe.class))),
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = RecipeDto.class))),
         @ApiResponse(responseCode = "404", description = "Recipe not found", content = @Content)
     })
     @GetMapping("/recipes/{recipeId}")
-    public ResponseEntity<Recipe> getRecipe(@PathVariable Long recipeId) {
-        Recipe recipe = recipeService.getRecipeById(recipeId);
+    public ResponseEntity<RecipeDto> getRecipe(@PathVariable Long recipeId) {
+        RecipeDto recipe = recipeService.getRecipeById(recipeId);
         return ResponseEntity.ok(recipe);
     }
 

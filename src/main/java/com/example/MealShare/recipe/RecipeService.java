@@ -1,5 +1,6 @@
 package com.example.MealShare.recipe;
 
+import com.example.MealShare.dto.RecipeDto;
 import com.example.MealShare.exceptions.ResourceNotFoundException;
 import com.example.MealShare.exceptions.UnauthorizedException;
 import com.example.MealShare.user.UserRepository;
@@ -7,6 +8,7 @@ import com.example.MealShare.user.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RecipeService {
@@ -19,17 +21,23 @@ public class RecipeService {
         this.userRepository = userRepository;
     }
 
-    public Recipe getRecipeById(Long id) {
-        return recipeRepository.getReferenceById(id);
+    public RecipeDto getRecipeById(Long id) {
+        Recipe recipe = recipeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Recipe not found"));
+        return RecipeDto.fromRecipe(recipe);
     }
 
     public List<Recipe> getRecipesByUserId(Long userId) {
-        User user = userRepository.getReferenceById(userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         return user.getRecipes();
     }
 
-    public List<Recipe> searchRecipes(String query) {
-        return recipeRepository.findByTitleContainingIgnoreCase(query);
+    public List<RecipeDto> searchRecipes(String query) {
+        return recipeRepository.findByTitleContainingIgnoreCase(query)
+                .stream()
+                .map(RecipeDto::fromRecipe)
+                .collect(Collectors.toList());
     }
 
     public Recipe createRecipeForUser(Recipe recipe, String username) {

@@ -74,6 +74,21 @@ public class AuthService {
 
         userRepository.save(user);
 
-        return ResponseEntity.ok("User registered successfully!");
+        // Authenticate the user after registration
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        registerRequest.getUsername(),
+                        registerRequest.getPassword()
+                )
+        );
+
+        User userDetails = (User) authentication.getPrincipal();
+        String jwt = jwtUtil.generateToken(userDetails);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("token", jwt);
+        response.put("username", userDetails.getUsername());
+
+        return ResponseEntity.ok(response);
     }
 }
