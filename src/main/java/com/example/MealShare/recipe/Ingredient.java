@@ -1,6 +1,7 @@
 package com.example.MealShare.recipe;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,6 +27,7 @@ public class Ingredient {
 
     @ManyToOne
     @JoinColumn(name = "recipe_id", nullable = false)
+    @JsonIgnore
     private Recipe recipe;
 
 }

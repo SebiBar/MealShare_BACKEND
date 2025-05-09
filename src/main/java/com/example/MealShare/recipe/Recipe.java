@@ -1,5 +1,6 @@
 package com.example.MealShare.recipe;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import com.example.MealShare.user.User;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -24,12 +26,12 @@ public class Recipe {
     @Column(nullable = false)
     private String title;
 
-    @Lob
-    @Column(columnDefinition = "TEXT")
     private String description;
     private String link;
 
-    private String  prepTime;
+    private int prepTime;
+    private int cookTime;
+    private int servingSize;
 
     private int calories;
     private int protein;
@@ -38,9 +40,10 @@ public class Recipe {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     private User user;
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Ingredient> ingredients;
+    private List<Ingredient> ingredients = new ArrayList<>();
 
 }

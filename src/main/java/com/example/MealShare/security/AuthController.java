@@ -2,84 +2,53 @@ package com.example.MealShare.security;
 
 import com.example.MealShare.dto.LoginRequest;
 import com.example.MealShare.dto.RegisterRequest;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.example.MealShare.user.User;
-import com.example.MealShare.user.UserRepository;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
+@Tag(name = "Authentication", description = "Authentication API for login and registration")
 public class AuthController {
 
-    private final AuthenticationManager authenticationManager;
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
+    private final AuthService authService;
 
     @Autowired
-    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository,
-                          PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
-        this.authenticationManager = authenticationManager;
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtUtil = jwtUtil;
+    public AuthController(AuthService authService) {
+        this.authService = authService;
     }
 
+    @Operation(summary = "Authenticate user", description = "Authenticates a user and returns a JWT token")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully authenticated",
+                content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "401", description = "Invalid credentials",
+                content = @Content)
+    })
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUsername(),
-                        loginRequest.getPassword()
-                )
-        );
-        //SecurityContextHolder.getContext().setAuthentication(authentication); redundant?
-        User userDetails = (User) authentication.getPrincipal();
-        String jwt = jwtUtil.generateToken(userDetails);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("token", jwt);
-        response.put("username", userDetails.getUsername());
-        response.put("email", userDetails.getEmail());
-        response.put("roles", userDetails.getAuthorities());
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(authService.authenticateUser(loginRequest));
     }
 
+    @Operation(summary = "Register new user", description = "Registers a new user in the system")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "User successfully registered",
+                content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "400", description = "Username or email already exists",
+                content = @Content)
+    })
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest) {
-        if (userRepository.existsByUsername(registerRequest.getUsername())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body("Error: Username is already taken!");
-        }
-
-        if (userRepository.existsByEmail(registerRequest.getEmail())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body("Error: Email is already in use!");
-        }
-
-        // Create new user's account
-        User user = new User();
-        user.setUsername(registerRequest.getUsername());
-        user.setEmail(registerRequest.getEmail());
-        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-
-        userRepository.save(user);
-
-        return ResponseEntity.ok("User registered successfully!");
+        return authService.registerUser(registerRequest);
     }
 
 }
